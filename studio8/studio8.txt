@@ -36,9 +36,26 @@ static void thread_exit(void){
 }
 
 3)
+if there are no data races, i.e. if we assume that thread i finishes before thread i+1 starts,
+then each thread should add 1 million to the variable. as there are 4 threads it should increment to 4 mil
 
+because there exists a data race, all 4 threads might read and write concurrently, meanining one thread's
+updates would be erased by another thread's reading of an old value of the variable
 
 4)
+print outs:
+[484728.117351] k thread module loaded 
+[484733.168765] k thread module offloaded 
+[484733.169116] shared_data was 1849540 
+[484764.700728] k thread module loaded 
+[484774.291516] k thread module offloaded 
+[484774.291871] shared_data was 1243696 
+[484779.957285] k thread module loaded 
+[484792.854121] k thread module offloaded 
+[484792.873299] shared_data was 2021328 
+
+clearly we can see that our value is nowhere close to 4mil and 
+the values are inconsistent.
 
 5)
 
