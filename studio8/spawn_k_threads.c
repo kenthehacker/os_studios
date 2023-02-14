@@ -7,7 +7,7 @@
 
 static struct task_struct *k_threads[4];
 
-int ret_zero(void *){
+int ret_zero(void * payload){
     while(!kthread_should_stop()){
         //do nothing
     }
@@ -15,13 +15,13 @@ int ret_zero(void *){
 }
 
 static int thread_init(void){
+	int i;
     printk(KERN_ALERT "k thread module loaded \n");
     k_threads[0] = kthread_create(ret_zero, NULL, "a");
     k_threads[1] = kthread_create(ret_zero, NULL, "b");
     k_threads[2] = kthread_create(ret_zero, NULL, "c");
     k_threads[3] = kthread_create(ret_zero, NULL, "d");
 
-    int i;
     for(i = 0; i<4; i++){
         kthread_bind(k_threads[i], i);
         wake_up_process(k_threads[i]);
@@ -30,8 +30,9 @@ static int thread_init(void){
 }
 
 static void thread_exit(void){
+	int i;
     printk(KERN_ALERT "k thread module offloaded \n");
-    int i;
+
     for(i = 0; i<4; i++){
         kthread_stop(k_threads[i]);
     }
