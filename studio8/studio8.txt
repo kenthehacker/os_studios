@@ -58,9 +58,57 @@ clearly we can see that our value is nowhere close to 4mil and
 the values are inconsistent.
 
 5)
+static struct task_struct *k_threads[4];
+atomic_t shared_data;
+
+
+int ret_zero(void * payload){
+    int i;
+	for(i = 0; i<iters; i++){
+		atomic_add(1,&shared_data);
+	}
+    while(!kthread_should_stop()){
+    	//do nothing
+	}
+    return 0;
+}
+
+static int thread_init(void){
+	int i;
+    printk(KERN_ALERT "k thread module loaded \n");
+    atomic_set(&shared_data,0);
+
+    k_threads[0] = kthread_create(ret_zero, NULL, "a");
+    k_threads[1] = kthread_create(ret_zero, NULL, "b");
+    k_threads[2] = kthread_create(ret_zero, NULL, "c");
+    k_threads[3] = kthread_create(ret_zero, NULL, "d");
+
+    for(i = 0; i<4; i++){
+        kthread_bind(k_threads[i], i);
+        wake_up_process(k_threads[i]);
+    }
+    return 0;
+}
+
+static void thread_exit(void){
+	int i;
+    printk(KERN_ALERT "k thread module offloaded \n");
+
+    for(i = 0; i<4; i++){
+        kthread_stop(k_threads[i]);
+    }
+    printk(KERN_ALERT "shared_data was %d \n", atomic_read(&shared_data));
+
+}
+
+
 
 6)
+[486279.012888] k thread module loaded 
+[486288.190966] k thread module offloaded 
+[486288.202160] shared_data was 4000000 
 
+7)
 
 
 
