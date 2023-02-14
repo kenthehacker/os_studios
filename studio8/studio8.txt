@@ -1,22 +1,11 @@
-#include <linux/init.h>
-#include <linux/module.h>
-#include <linux/kernel.h>
-#include <linux/ktime.h>
-#include <linux/hrtimer.h>
-#include <linux/kthread.h>
+1) Kenichi Matsuo
 
-#define iters 1000000
-
+2)
 static struct task_struct *k_threads[4];
-volatile int shared_data = 0;
-
 
 int ret_zero(void * payload){
-    int i;
     while(!kthread_should_stop()){
-        for(i = 0; i<iters; i++){
-            shared_data++;
-        }
+        //do nothing
     }
     return 0;
 }
@@ -43,19 +32,17 @@ static void thread_exit(void){
     for(i = 0; i<4; i++){
         kthread_stop(k_threads[i]);
     }
-    printk(KERN_ALERT "shared_data was %d \n", shared_data);
 
 }
 
-module_init(thread_init);
-module_exit(thread_exit);
-MODULE_AUTHOR("kenthehacker");
-MODULE_DESCRIPTION("Thread Module");
-MODULE_LICENSE("GPL"); 
+3)
 
 
+4)
 
+5)
 
+6)
 
 
 
