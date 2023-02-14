@@ -109,6 +109,18 @@ static void thread_exit(void){
 [486288.202160] shared_data was 4000000 
 
 7)
+[486488.653264] k thread module loaded 
+[486488.654151] starting forloop
+[486488.654168] starting forloop
+[486488.655515] starting forloop
+[486488.657429] starting forloop
+[486488.902917] ending loop
+[486489.036928] ending loop
+[486489.045760] ending loop
+[486489.088860] ending loop
+[486498.247303] k thread module offloaded 
+[486498.257559] shared_data was 4000000 
 
+it took about .25 seconds
 
 
