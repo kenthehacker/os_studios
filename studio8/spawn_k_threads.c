@@ -13,11 +13,12 @@ volatile int shared_data = 0;
 
 int ret_zero(void * payload){
     int i;
+	for(i = 0; i<iters; i++){
+		shared_data++;
+	}
     while(!kthread_should_stop()){
-        for(i = 0; i<iters; i++){
-            shared_data++;
-        }
-    }
+    	//do nothing
+	}
     return 0;
 }
 
