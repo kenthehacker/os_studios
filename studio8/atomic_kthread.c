@@ -9,7 +9,7 @@
 #define iters 1000000
 
 static struct task_struct *k_threads[4];
-atomic_t shared_data = 0;
+atomic_t shared_data;
 
 
 int ret_zero(void * payload){
