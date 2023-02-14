@@ -30,12 +30,12 @@ __used __section("__versions") = {
 	{ 0xbf8d9e8a, "wake_up_process" },
 	{ 0x73ee3f0b, "kthread_bind" },
 	{ 0xfe6f205b, "kthread_create_on_node" },
-	{ 0xc5850110, "printk" },
 	{ 0xb3f7646e, "kthread_should_stop" },
+	{ 0xc5850110, "printk" },
 	{ 0xb1ad28e0, "__gnu_mcount_nc" },
 };
 
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "23BB2DC5D7123EA8ECE5B6A");
+MODULE_INFO(srcversion, "FE63CAA5A3FC61DE3DB5B50");

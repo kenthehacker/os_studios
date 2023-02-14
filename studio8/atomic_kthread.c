@@ -14,9 +14,11 @@ atomic_t shared_data;
 
 int ret_zero(void * payload){
     int i;
+	printk(KERN_ALERT "starting forloop\n");
 	for(i = 0; i<iters; i++){
 		atomic_add(1,&shared_data);
 	}
+	printk(KERN_ALERT "ending loop\n");
     while(!kthread_should_stop()){
     	//do nothing
 	}
