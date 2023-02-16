@@ -93,7 +93,9 @@ the critical function. If we call on lock within the critical function then all 
 can be within the criticla function
 
 9)
-
+it is not possible to do a proper sleep lock entirely in userspace since 
+the userspace processes or threads cannot put itself or others to sleep
+we instead need the kernel to do this for the userspace. hence the syscall is necessary
 
 
 
