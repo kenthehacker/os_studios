@@ -6,10 +6,43 @@ root@kenpi:/home/kenpi# cat /proc/sys/kernel/sched_autogroup_enabled
 
 
 3)
+top command:
+11340 kenpi     20   0    1884    336    276 R 100.0   0.0   4:41.85 cpu_bound_workl   
+above, we see that the CPU is running at 100%
+
+(check screenshot for HTOP output)
+
+kenpi@kenpi:~/Desktop/studios/os_studios/studio10 $ ps -p 11340 -o psr
+PSR
+  1
+
+above shows that its running on CPU #1 when i asked it to run on CPU #1
+
 
 4)
+the pi was acting sluggish when i ran all 4 cores on the program
+
 
 5)
+
+WITH running all 4 cores:
+Generating matrices...
+Multiplying matrices...
+Multiplication done!
+
+real	0m3.799s
+user	0m1.852s
+sys	0m0.020s
+
+
+WITHOUT running all 4 cores :
+Generating matrices...
+Multiplying matrices...
+Multiplication done!
+
+real	0m1.991s
+user	0m1.965s
+sys	0m0.020s
 
 6)
 
