@@ -1,0 +1,30 @@
+1)Kenichi Matsuo
+
+2)
+root@kenpi:/home/kenpi# cat /proc/sys/kernel/sched_autogroup_enabled
+0
+
+
+3)
+
+4)
+
+5)
+
+6)
+
+7)
+
+8)
+
+
+
+
+
+
+
+
+
+
+
+
