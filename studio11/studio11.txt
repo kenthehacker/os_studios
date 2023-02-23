@@ -1,8 +1,15 @@
 1)Kenichi Matsuo
 
 2)
+kenpi@kenpi:~/Desktop/studios/os_studios/studio11 $ time ./big_loop 1
+processor: 1
+
+real    0m9.355s
+user    0m8.451s
+sys     0m0.046s
 
 3)
+
 
 4)
 
