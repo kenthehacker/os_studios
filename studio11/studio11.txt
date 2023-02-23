@@ -9,7 +9,9 @@ user    0m8.451s
 sys     0m0.046s
 
 3)
-
+the DBUS daemon interrupted the process as well as kworker as well as sched_switch;
+i know this happened because the sched_switch interrupts the big_loop which then either the kworker or the DBUS daemon 
+occupied the 0th core.
 
 4)
 
