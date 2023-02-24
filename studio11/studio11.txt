@@ -44,6 +44,11 @@ timing
 
 
 8)
+there were 81 sched_switches and the program was preempted
+by lightDM, this happened during the idle time
+early when the process was running; the kernel probably
+allocated this task to CPU 0 during this time slot since
+there was a considerable idle time slot
 
 
 9)
