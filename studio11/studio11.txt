@@ -53,7 +53,11 @@ there was a considerable idle time slot
 
 9)
 
-
+the time slices were about 0.1 units of time apart or about 0.1 seconds
+each of the processes were running one after the other like in a round robin as 
+the name suggests. when i had the program run 3 different tasks it cycled between
+running the three different processes in a set time interval. i.e. if process A
+runs for 0.1 seconds process B would run right after and so on. 
 
 
 
