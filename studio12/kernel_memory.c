@@ -10,8 +10,14 @@
 #include <linux/time.h>
 #include <linux/kthread.h>
 #include <linux/mm.h>
-
 #include <asm/uaccess.h>
+
+
+#define ARR_SIZE 8
+typedef struct datatype_t {
+    unsigned int array[ARR_SIZE];
+} datatype;
+
 
 static uint nr_structs = 2000;
 module_param(nr_structs, uint, 0644); 
@@ -43,6 +49,9 @@ thread_fn(void * data)
     printk("Hello from thread %s. nr_structs=%u\n", current->comm, nr_structs);
 
     while (!kthread_should_stop()) {
+        printf("kernel page size %lu bytes \n",PAGE_SIZE);
+        printf("datatype struct is %zu bytes \n". sizeof(datatype));
+        printf("%ld fits in a page\n",PAGE_SIZE/sizeof(datatype));
         schedule();
     }
 
