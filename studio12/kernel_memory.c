@@ -47,11 +47,11 @@ static int
 thread_fn(void * data)
 {
     printk("Hello from thread %s. nr_structs=%u\n", current->comm, nr_structs);
-
+    printk("kernel page size %lu bytes \n",PAGE_SIZE);
+    printk("datatype struct is %zu bytes \n", sizeof(datatype));
+    printk("%ld fits in a page\n",PAGE_SIZE/sizeof(datatype));
     while (!kthread_should_stop()) {
-        printf("kernel page size %lu bytes \n",PAGE_SIZE);
-        printf("datatype struct is %zu bytes \n". sizeof(datatype));
-        printf("%ld fits in a page\n",PAGE_SIZE/sizeof(datatype));
+        
         schedule();
     }
 
