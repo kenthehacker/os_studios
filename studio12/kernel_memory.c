@@ -61,8 +61,11 @@ thread_fn(void * data)
     if (nr_structs % nr_structs_per_page !=0){
         nr_pages++;
     }
+    printk("found we need %u pages\n",nr_pages);
     order = my_get_order((unsigned int)nr_pages);
+    printk("order is %u \n",order );
     pages = alloc_pages(GFP_KERNEL, nr_pages);
+    printk("alloced pages \n");
     if (pages == NULL){
         printk("FAILED TO MAKE PAGE");
         return 0;
