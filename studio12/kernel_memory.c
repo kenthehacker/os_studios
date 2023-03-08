@@ -99,7 +99,7 @@ thread_fn(void * data)
             this_struct = (datatype *)((void *)this_struct +sizeof(datatype));
             for(k = 0; k<ARR_SIZE;k++){
                 int supposed_value = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
-                printk("set to %d supposed_value: %d \n",this_struct->array[k], supposed_value);
+                //printk("set to %d supposed_value: %d \n",this_struct->array[k], supposed_value);
                 if (this_struct->array[k]!=supposed_value){
                     printk("FAILED\n");
                     return -1;
