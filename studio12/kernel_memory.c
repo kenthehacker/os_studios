@@ -73,7 +73,7 @@ thread_fn(void * data)
         return -1;
     }
     //printk("nr_struct_per_page: %u nr_pages: %u order: %u \n",nr_structs_per_page,nr_pages,order);
-
+    int counter = 0;
     for(i = 0; i < nr_pages; i++){
         unsigned long page_frame_nr = page_to_pfn(pages);
         unsigned long physical_address = PFN_PHYS(page_frame_nr);
@@ -83,15 +83,13 @@ thread_fn(void * data)
             for(k = 0; k < ARR_SIZE; k++){
                 int supposed_value = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
                 this_struct->array[k] = supposed_value;
-                printk("set to %d\n",this_struct->array[k]);
-                if (this_struct->array[k]!=supposed_value){
-                    printk("FUCK\n");
-                }
+                printk("set to %d supposed_value: %d \n",this_struct->array[k], supposed_value);
                 /*
                 if (k == 0 && j == 0){
                     printk("at j=%d and k&j=0 %d\n",j,dat->array[k]);
                 }
                 */
+                counter++;
             }
         }
     }
@@ -99,7 +97,7 @@ thread_fn(void * data)
     while (!kthread_should_stop()) {
         schedule();
     }
-    
+    i = 0; j = 0; k = 0;
     for(i = 0; i < nr_pages; i++){
         unsigned long page_frame_nr = page_to_pfn(pages);
         unsigned long physical_address = PFN_PHYS(page_frame_nr);
@@ -110,12 +108,14 @@ thread_fn(void * data)
                 int supposed_value = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
                 printk("supposed to be: %d but got %d\n",supposed_value,this_struct->array[k]);
                 if (this_struct->array[k]!=supposed_value){
-                    printk("CHECKING ARRAY VALUE IN STRUCT GONE WRONG \n");
+                    //printk("CHECKING ARRAY VALUE IN STRUCT GONE WRONG \n");
                     //return -1;
                 }
+                counter--;
             }
         }
     }
+    printk("counter %d",counter);
     printk("SUCCESS");
     __free_pages(pages,order);
 
