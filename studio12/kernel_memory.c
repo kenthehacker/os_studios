@@ -101,7 +101,7 @@ thread_fn(void * data)
     for(i = 0; i < nr_pages; i++){
         unsigned long page_frame_nr = page_to_pfn(pages);
         unsigned long physical_address = PFN_PHYS(page_frame_nr);
-        datatype * virtual_address = __va(physical_address);
+        datatype * virtual_address = (datatype *)__va(physical_address);
         for(j = 0; j < nr_structs_per_page; j++){
             datatype * this_struct = &virtual_address[j];
             for(k = 0; k < ARR_SIZE; k++){
