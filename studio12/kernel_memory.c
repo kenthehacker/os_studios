@@ -82,6 +82,7 @@ thread_fn(void * data)
             datatype * this_struct = &virtual_address[j];
             for(k = 0; k < ARR_SIZE; k++){
                 this_struct->array[k] = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
+                printk("set to %d\n",this_struct->array[k]);
                 /*
                 if (k == 0 && j == 0){
                     printk("at j=%d and k&j=0 %d\n",j,dat->array[k]);
@@ -105,7 +106,7 @@ thread_fn(void * data)
                 int supposed_value = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
                 if (this_struct->array[k]!=supposed_value){
                     printk("CHECKING ARRAY VALUE IN STRUCT GONE WRONG \n");
-                    printk("supposed to be: %d but got %d",supposed_value,this_struct->array[k]);
+                    printk("supposed to be: %d but got %d\n",supposed_value,this_struct->array[k]);
                     return -1;
                 }
             }
