@@ -53,12 +53,13 @@ thread_fn(void * data)
     int i;
     int j;
     int k;
-
+    /*
     printk("Hello from thread %s. nr_structs=%u\n", current->comm, nr_structs);
     printk("kernel page size %lu bytes \n",PAGE_SIZE);
     printk("datatype struct is %zu bytes \n", sizeof(datatype));
     printk("%ld fits in a page\n",PAGE_SIZE/sizeof(datatype));
-    
+    */
+
     nr_structs_per_page = (int)(PAGE_SIZE/sizeof(datatype));
     nr_pages = nr_structs/nr_structs_per_page;
     if (nr_structs % nr_structs_per_page !=0){
@@ -69,21 +70,23 @@ thread_fn(void * data)
     
     if (pages == NULL){
         printk("FAILED TO MAKE PAGE");
-        return 0;
+        return -1;
     }
-    printk("nr_struct_per_page: %u nr_pages: %u order: %u \n",nr_structs_per_page,nr_pages,order);
+    //printk("nr_struct_per_page: %u nr_pages: %u order: %u \n",nr_structs_per_page,nr_pages,order);
 
     for(i = 0; i < nr_pages; i++){
         unsigned long page_frame_nr = page_to_pfn(pages);
         unsigned long physical_address = PFN_PHYS(page_frame_nr);
         datatype * virtual_address = __va(physical_address);
         for(j = 0; j < nr_structs_per_page; j++){
-            datatype * dat = &virtual_address[j];
+            datatype * this_struct = &virtual_address[j];
             for(k = 0; k < ARR_SIZE; k++){
-                dat->array[k] = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
+                this_struct->array[k] = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
+                /*
                 if (k == 0 && j == 0){
                     printk("at j=%d and k&j=0 %d\n",j,dat->array[k]);
                 }
+                */
             }
         }
     }
@@ -91,6 +94,22 @@ thread_fn(void * data)
     while (!kthread_should_stop()) {
         schedule();
     }
+    
+    for(i = 0; i < nr_pages; i++){
+        unsigned long page_frame_nr = page_to_pfn(pages);
+        unsigned long physical_address = PFN_PHYS(page_frame_nr);
+        datatype * virtual_address = __va(physical_address);
+        for(j = 0; j < nr_structs_per_page; j++){
+            datatype * this_struct = &virtual_address[j];
+            for(k = 0; k < ARR_SIZE; k++){
+                if (this_struct->array[k]!=i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k){
+                    printk("CHECKING ARRAY VALUE IN STRUCT GONE WRONG \n");
+                    return -1;
+                }
+            }
+        }
+    }
+    __free_pages(pages,order);
 
     return 0;
 }

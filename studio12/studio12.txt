@@ -57,5 +57,18 @@ equivalent to taking log_2(value)
 
 
 4.
+[ 2467.068990] Loaded kernel_memory module
+[ 2467.069286] Hello from thread k_memory. nr_structs=200
+[ 2467.069305] kernel page size 4096 bytes 
+[ 2467.069321] datatype struct is 32 bytes 
+[ 2467.069337] 128 fits in a page
+[ 2467.069359] nr_struct_per_page: 128 nr_pages: 2 order: 1 
+[ 2467.069374] at j=0 and k&j=0 0
+[ 2467.069402] at j=0 and k&j=0 1024
+[ 2486.145363] Unloaded kernel_memory module
+
+
+5.
+
 
 
