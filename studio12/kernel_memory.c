@@ -46,12 +46,31 @@ my_get_order(unsigned int value)
 static int
 thread_fn(void * data)
 {
+    unsigned int order;
+    int nr_structs_per_page;
+    int nr_pages;
+    struct page *pages;
+
     printk("Hello from thread %s. nr_structs=%u\n", current->comm, nr_structs);
     printk("kernel page size %lu bytes \n",PAGE_SIZE);
     printk("datatype struct is %zu bytes \n", sizeof(datatype));
     printk("%ld fits in a page\n",PAGE_SIZE/sizeof(datatype));
+    
+    nr_structs_per_page = (int)(PAGE_SIZE/sizeof(datatype));
+    nr_pages = nr_structs/nr_structs_per_page;
+    if (nr_structs % nr_structs_per_page !=0){
+        nr_pages++;
+    }
+    order = my_get_order((unsigned int)nr_pages);
+    pages = alloc_pages(GFP_KERNEL, nr_pages);
+    if (pages == NULL){
+        printk("FAILED TO MAKE PAGE");
+        return 0;
+    }
+    printk("SUCCESS: pages made\n");
+    printk("nr_struct_per_page: %u nr_pages: %u order: %u \n",nr_structs_per_page,nr_pages,order);
+
     while (!kthread_should_stop()) {
-        
         schedule();
     }
 

@@ -1,0 +1,14 @@
+1. Kenichi Matsuo
+
+2.
+[339973.628321] Hello from thread k_memory. nr_structs=2000
+[339973.628340] kernel page size 4096 bytes 
+[339973.628357] datatype struct is 32 bytes 
+[339973.628373] 128 fits in a page
+[339989.326167] Unloaded kernel_memory module
+
+3.
+
+
+
+
