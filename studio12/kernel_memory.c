@@ -73,83 +73,41 @@ thread_fn(void * data)
         return -1;
     }
     
-    datatype *cur_struct;
+    datatype *this_struct;
     for(i = 0; i < nr_pages; i++){
-        unsigned long pfn = page_to_pfn(&pages[i]);
-        unsigned long physical_address = PFN_PHYS(pfn);
-        void *virtual_address = (void *)__va(physical_address);
-        cur_struct = (datatype *)virtual_address;
-        for(j = 0; j<nr_structs_per_page; j++){
-            cur_struct = (datatype *)((void *)cur_struct +sizeof(datatype));
-            for(k = 0; k<ARR_SIZE;k++){
-                int supposed_value = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
-                cur_struct->array[k] = supposed_value;
-            }
-        }
-    }
-    while (!kthread_should_stop()) {
-        schedule();
-    }
-    for(i = 0; i < nr_pages; i++){
-        unsigned long pfn = page_to_pfn(&pages[i]);
-        unsigned long physical_address = PFN_PHYS(pfn);
-        void *virtual_address = (void *)__va(physical_address);
-        cur_struct = (datatype *)virtual_address;
-        for(j = 0; j<nr_structs_per_page; j++){
-            cur_struct = (datatype *)((void *)cur_struct +sizeof(datatype));
-            for(k = 0; k<ARR_SIZE;k++){
-                int supposed_value = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
-                printk("set to %d supposed_value: %d \n",cur_struct->array[k], supposed_value);
-                if (cur_struct->array[k]!=supposed_value){
-                    //printk("FAILED\n");
-                }
-            }
-        }
-    }
-
-    /*
-    for(i = 0; i < nr_pages; i++){
-        unsigned long page_frame_nr = page_to_pfn(pages);
+        unsigned long page_frame_nr = page_to_pfn(&pages[i]);
         unsigned long physical_address = PFN_PHYS(page_frame_nr);
-        datatype * virtual_address = (datatype *)__va(physical_address);
-        for(j = 0; j < nr_structs_per_page; j++){
-            datatype * this_struct = &virtual_address[j];
-            for(k = 0; k < ARR_SIZE; k++){
+        void *virtual_address = (void *)__va(physical_address);
+        this_struct = (datatype *)virtual_address;
+        for(j = 0; j<nr_structs_per_page; j++){
+            this_struct = (datatype *)((void *)this_struct +sizeof(datatype));
+            for(k = 0; k<ARR_SIZE;k++){
                 int supposed_value = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
                 this_struct->array[k] = supposed_value;
-                printk("set to %d supposed_value: %d \n",this_struct->array[k], supposed_value);
-                
-                //if (k == 0 && j == 0){
-                //    printk("at j=%d and k&j=0 %d\n",j,dat->array[k]);
-                //}
-                
-                
             }
         }
     }
-
     while (!kthread_should_stop()) {
         schedule();
     }
-    i = 0; j = 0; k = 0;
     for(i = 0; i < nr_pages; i++){
-        unsigned long page_frame_nr = page_to_pfn(pages);
+        unsigned long page_frame_nr = page_to_pfn(&pages[i]);
         unsigned long physical_address = PFN_PHYS(page_frame_nr);
-        datatype * virtual_address = (datatype *)__va(physical_address);
-        for(j = 0; j < nr_structs_per_page; j++){
-            datatype * this_struct = &virtual_address[j];
-            for(k = 0; k < ARR_SIZE; k++){
+        void *virtual_address = (void *)__va(physical_address);
+        this_struct = (datatype *)virtual_address;
+        for(j = 0; j<nr_structs_per_page; j++){
+            this_struct = (datatype *)((void *)this_struct +sizeof(datatype));
+            for(k = 0; k<ARR_SIZE;k++){
                 int supposed_value = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
-                printk("supposed to be: %d but got %d\n",supposed_value,this_struct->array[k]);
+                printk("set to %d supposed_value: %d \n",this_struct->array[k], supposed_value);
                 if (this_struct->array[k]!=supposed_value){
-                    //printk("CHECKING ARRAY VALUE IN STRUCT GONE WRONG \n");
-                    //return -1;
+                    printk("FAILED\n");
+                    return -1;
                 }
-
             }
         }
     }
-    */
+
     printk("nr_struct_per_page: %u nr_pages: %u order: %u \n",nr_structs_per_page,nr_pages,order);
     printk("SUCCESS");
     __free_pages(pages,order);
