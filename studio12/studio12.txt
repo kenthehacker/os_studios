@@ -69,6 +69,29 @@ equivalent to taking log_2(value)
 
 
 5.
+default nr_struct
+[ 2264.906258] Loaded kernel_memory module
+[ 2267.510032] nr_struct_per_page: 128 nr_pages: 16 order: 4 
+[ 2267.510050] SUCCESS
+[ 2267.510134] Unloaded kernel_memory module
 
+nr_structs=1000
+[ 2320.134113] Unloaded kernel_memory module
+[ 2329.790774] Loaded kernel_memory module
+[ 2332.891205] nr_struct_per_page: 128 nr_pages: 8 order: 3 
+[ 2332.891225] SUCCESS
+[ 2332.891311] Unloaded kernel_memory module
+
+nr_structs=10000
+[ 2362.787433] Loaded kernel_memory module
+[ 2365.340242] nr_struct_per_page: 128 nr_pages: 79 order: 7 
+[ 2365.340261] SUCCESS
+[ 2365.340346] Unloaded kernel_memory module
+
+nr_structs=50000
+[ 2392.880278] Loaded kernel_memory module
+[ 2396.359310] nr_struct_per_page: 128 nr_pages: 391 order: 9 
+[ 2396.359330] SUCCESS
+[ 2396.359435] Unloaded kernel_memory module
 
 
