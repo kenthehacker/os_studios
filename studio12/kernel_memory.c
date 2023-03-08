@@ -64,7 +64,7 @@ thread_fn(void * data)
     printk("found we need %u pages\n",nr_pages);
     order = my_get_order((unsigned int)nr_pages);
     printk("order is %u \n",order );
-    pages = alloc_pages(GFP_KERNEL, (unsigned int) nr_pages);
+    pages = alloc_pages(GFP_KERNEL, order);
     printk("alloced pages \n");
     if (pages == NULL){
         printk("FAILED TO MAKE PAGE");
