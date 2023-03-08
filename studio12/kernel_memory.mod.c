@@ -30,8 +30,10 @@ __used __section("__versions") = {
 	{ 0x23196a6c, "kthread_stop" },
 	{ 0xbf8d9e8a, "wake_up_process" },
 	{ 0xfe6f205b, "kthread_create_on_node" },
-	{ 0x1000e51, "schedule" },
+	{ 0x987c11c7, "__pv_phys_pfn_offset" },
+	{ 0x5015cc7f, "mem_map" },
 	{ 0xb3f7646e, "kthread_should_stop" },
+	{ 0x1000e51, "schedule" },
 	{ 0xbef6bae2, "__alloc_pages_nodemask" },
 	{ 0xc5850110, "printk" },
 	{ 0xb1ad28e0, "__gnu_mcount_nc" },
@@ -40,4 +42,4 @@ __used __section("__versions") = {
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "B1F4DC1DCB364D24616A948");
+MODULE_INFO(srcversion, "E949107C59C720225ADE0EB");

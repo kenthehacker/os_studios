@@ -21,6 +21,7 @@ typedef struct datatype_t {
 
 static uint nr_structs = 2000;
 module_param(nr_structs, uint, 0644); 
+static struct page *pages;
 
 static struct task_struct * kthread = NULL;
 
@@ -49,7 +50,9 @@ thread_fn(void * data)
     unsigned int order;
     int nr_structs_per_page;
     int nr_pages;
-    struct page *pages;
+    int i;
+    int j;
+    int k;
 
     printk("Hello from thread %s. nr_structs=%u\n", current->comm, nr_structs);
     printk("kernel page size %lu bytes \n",PAGE_SIZE);
@@ -61,17 +64,29 @@ thread_fn(void * data)
     if (nr_structs % nr_structs_per_page !=0){
         nr_pages++;
     }
-    printk("found we need %u pages\n",nr_pages);
     order = my_get_order((unsigned int)nr_pages);
-    printk("order is %u \n",order );
     pages = alloc_pages(GFP_KERNEL, order);
-    printk("alloced pages \n");
+    
     if (pages == NULL){
         printk("FAILED TO MAKE PAGE");
         return 0;
     }
-    printk("SUCCESS: pages made\n");
     printk("nr_struct_per_page: %u nr_pages: %u order: %u \n",nr_structs_per_page,nr_pages,order);
+
+    for(i = 0; i < nr_pages; i++){
+        unsigned long page_frame_nr = page_to_pfn(pages);
+        unsigned long physical_address = PFN_PHYS(page_frame_nr);
+        datatype * virtual_address = __va(physical_address);
+        for(j = 0; j < nr_structs_per_page; j++){
+            datatype * dat = &virtual_address[j];
+            for(k = 0; k < ARR_SIZE; k++){
+                dat->array[k] = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
+                if (k == 0 && j == 0){
+                    printk("at j=%d and k&j=0 %d\n",j,dat->array[k]);
+                }
+            }
+        }
+    }
 
     while (!kthread_should_stop()) {
         schedule();
