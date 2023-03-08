@@ -102,13 +102,16 @@ thread_fn(void * data)
         for(j = 0; j < nr_structs_per_page; j++){
             datatype * this_struct = &virtual_address[j];
             for(k = 0; k < ARR_SIZE; k++){
-                if (this_struct->array[k]!=i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k){
+                int supposed_value = i * nr_structs_per_page*ARR_SIZE + j*ARR_SIZE + k;
+                if (this_struct->array[k]!=supposed_value){
                     printk("CHECKING ARRAY VALUE IN STRUCT GONE WRONG \n");
+                    printk("supposed to be: %d but got %d",supposed_value,this_struct->array[k]);
                     return -1;
                 }
             }
         }
     }
+    printk("SUCCESS");
     __free_pages(pages,order);
 
     return 0;

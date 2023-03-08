@@ -30,8 +30,8 @@ __used __section("__versions") = {
 	{ 0x23196a6c, "kthread_stop" },
 	{ 0xbf8d9e8a, "wake_up_process" },
 	{ 0xfe6f205b, "kthread_create_on_node" },
-	{ 0xc5850110, "printk" },
 	{ 0x316225ce, "__free_pages" },
+	{ 0xc5850110, "printk" },
 	{ 0x987c11c7, "__pv_phys_pfn_offset" },
 	{ 0x5015cc7f, "mem_map" },
 	{ 0xb3f7646e, "kthread_should_stop" },
@@ -43,4 +43,4 @@ __used __section("__versions") = {
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "48441982A2E4B119C226502");
+MODULE_INFO(srcversion, "A936BA18168C4B2B8CCE045");
