@@ -48,6 +48,36 @@ isn't created. we guarunteed that we've created the mem object by running follow
 
 
 5.
+We avoid data races because we ensure that the follower cannot read until the write is fully completed
+by the leader, and deletion cannot proceed until the read is completed. We don't have deadlocks because
+the followr and the leader cannot run in true parallel, read and writes happen strictly one at a time by
+design. 
+
+kenpi@kenpi:~/Desktop/studios/os_studios/studio13 $ ./leader 
+PRINTING LEADER VALUES 
+5136076
+2091243229
+199579005
+912741699
+1654942611
+479910268
+224298343
+1899749413
+1677580122
+73478952
+
+kenpi@kenpi:~/Desktop/studios/os_studios/studio13 $ ./follower 
+PRINTING FOLLOWER ARRAY: 
+5136076
+2091243229
+199579005
+912741699
+1654942611
+479910268
+224298343
+1899749413
+1677580122
+73478952
 
 
 6.
