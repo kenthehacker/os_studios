@@ -19,9 +19,16 @@ int main(void){
     struct shared_data * dat;
     dat = mmap(NULL, sizeof(dat),PROT_READ | PROT_WRITE, MAP_SHARED, file_descriptor, 0);
     if (dat == MAP_FAILED){
-        printf("map failed \n");
+        printf("map failed in follower \n");
         return -1;
     }
+
+    /*
+    dat->write_guard = 1;
+    while (dat->read_guard == 0){
+        //wait
+    }
+    */
 
     int follower_array[shared_mem_size];
     memcpy(follower_array, (const void *) dat->data, sizeof(follower_array));
@@ -29,7 +36,10 @@ int main(void){
     for(int i = 0; i < shared_mem_size; i++){
         printf("%d\n",follower_array[i]);
     }
+
+    dat->delete_guard = 1;
     
+
     return 0;
 }
 

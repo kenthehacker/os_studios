@@ -23,16 +23,36 @@ int main(void){
 
     dat = mmap(NULL, sizeof(dat),PROT_READ | PROT_WRITE, MAP_SHARED, file_descriptor, 0);
     if (dat == MAP_FAILED){
-        printf("map failed \n");
+        printf("map failed in leader \n");
         return -1;
     }
 
-    srand(21);
+    dat->write_guard = 0;
+    dat->read_guard = 0;
+    dat->delete_guard = 0;
+    /*
+    while(dat->write_guard == 0){
+        //wait
+    }
+    */
+    //srand(1);
     printf("PRINTING LEADER VALUES \n");
     for(int i = 0; i < shared_mem_size; i++){
-        dat->data[i] = rand();
+        int val = rand();
+        printf("adding val: %d\n",val);
+        dat->data[i] = val;
         printf("%d\n",dat->data[i]);
     }
 
+    dat->read_guard = 1;
+
+    /*
+    while(dat->delete_guard == 0){
+        //do nothing
+    }
+    */
+
+    munmap(dat,0);
+    //close(file_descriptor);
     return 0;
 }

@@ -47,4 +47,9 @@ we got rid of O_CREAT because this only comes in play if there is a chance the m
 isn't created. we guarunteed that we've created the mem object by running follower.c first
 
 
+5.
+
+
+6.
+
 
