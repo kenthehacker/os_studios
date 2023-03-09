@@ -23,12 +23,12 @@ int main(void){
         return -1;
     }
 
-    /*
+
     dat->write_guard = 1;
     while (dat->read_guard == 0){
         //wait
     }
-    */
+
 
     int follower_array[shared_mem_size];
     memcpy(follower_array, (const void *) dat->data, sizeof(follower_array));

@@ -30,27 +30,26 @@ int main(void){
     dat->write_guard = 0;
     dat->read_guard = 0;
     dat->delete_guard = 0;
-    /*
+    
     while(dat->write_guard == 0){
         //wait
     }
-    */
-    //srand(1);
+    
+    srand(420);
     printf("PRINTING LEADER VALUES \n");
     for(int i = 0; i < shared_mem_size; i++){
         int val = rand();
-        printf("adding val: %d\n",val);
         dat->data[i] = val;
         printf("%d\n",dat->data[i]);
     }
 
     dat->read_guard = 1;
 
-    /*
+
     while(dat->delete_guard == 0){
         //do nothing
     }
-    */
+
 
     munmap(dat,0);
     //close(file_descriptor);
