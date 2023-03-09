@@ -13,7 +13,7 @@ int main(){
     ftruncate(fd, sizeof(struct shared_data));
     my_struct = mmap(NULL, sizeof(struct shared_data), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     my_struct->read_guard =0;
-    my_struct->write_guard = 0
+    my_struct->write_guard = 0;
     for (int i = 0; i < shared_mem_size; i++) {
         my_struct->data[i] = rand() % 100;
     }
