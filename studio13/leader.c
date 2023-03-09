@@ -16,7 +16,7 @@ int main(void){
     }
     struct shared_data * dat;
 
-    if (ftruncate(file_descriptor,sizeof(dat)) == -1){
+    if (ftruncate(file_descriptor,sizeof(struct shared_data)) == -1){
         printf("failed to ftruncate\n");
         return -1;
     }
@@ -35,14 +35,16 @@ int main(void){
         //wait
     }
     
-    srand(420);
-    printf("PRINTING LEADER VALUES \n");
+    //dat->data = malloc(sizeof(int) * shared_mem_size);
+    srand(42);
+    printf("WRITING LEADER VALUES \n");
     for(int i = 0; i < shared_mem_size; i++){
-        int val = rand();
+        int val = rand()%100;
         dat->data[i] = val;
         printf("%d\n",dat->data[i]);
     }
-
+    printf("dat value: %p\n",(void*)dat->data);
+    printf("FINISHED WRITING \n");
     dat->read_guard = 1;
 
 
@@ -51,7 +53,8 @@ int main(void){
     }
 
 
+
     munmap(dat,0);
-    //close(file_descriptor);
+    close(file_descriptor);
     return 0;
 }

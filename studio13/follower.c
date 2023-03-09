@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -29,9 +30,14 @@ int main(void){
         //wait
     }
 
+    //int follower_array[shared_mem_size];
 
-    int follower_array[shared_mem_size];
-    memcpy(follower_array, (const void *) dat->data, sizeof(follower_array));
+    int *follower_array = malloc(sizeof(int) * shared_mem_size);
+    printf("dat value: %p\n",(void*)dat->data);
+    printf("made follower array\n" );
+    memcpy(follower_array, (const void *)dat->data, sizeof(int)*shared_mem_size);
+
+
     printf("PRINTING FOLLOWER ARRAY: \n");
     for(int i = 0; i < shared_mem_size; i++){
         printf("%d\n",follower_array[i]);
