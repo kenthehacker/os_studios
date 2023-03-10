@@ -1,5 +1,5 @@
 #define shared_mem "/shared_memory_region"
-#define shared_mem_size 10
+#define shared_mem_size 1000000
 
 struct shared_data {
     volatile int write_guard;

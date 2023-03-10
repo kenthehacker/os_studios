@@ -82,4 +82,21 @@ PRINTING FOLLOWER ARRAY:
 
 6.
 
+linux lab machine 2million:
+real	0m0.043s
+user	0m0.028s
+sys	0m0.006s
+4,000,000 bytes/0.043s = 93 petabytes a second
+
+
+linux lab machine 1million:
+real	0m0.040s
+user	0m0.009s
+sys	0m0.006s
+200 petabytes a second
+
+raspberry pi 1 million
+
+
+raspberry pi 2 million
 
