@@ -20,7 +20,31 @@ the VFS
 
 
 4.
-
+[1342930.916592] LOADED studio 15 module 
+[1342930.918099] fs: 1f64198c files: a2c90596 nsproxy: 29894748 
+[1342930.918121] pwd dentry: 8c5a4479 | root dentry: 8c5a4479 
+[1342930.918138] pwd and root not the same pwd: / | root: / 
+[1342930.918154] media
+[1342930.918169] mnt
+[1342930.918184] srv
+[1342930.918199] opt
+[1342930.918214] sbin
+[1342930.918229] lost+found
+[1342930.918244] selinux
+[1342930.918259] lib
+[1342930.918274] bin
+[1342930.918289] root
+[1342930.918303] tmp
+[1342930.918318] home
+[1342930.918333] boot
+[1342930.918348] var
+[1342930.918362] run
+[1342930.918376] sys
+[1342930.918391] proc
+[1342930.918405] etc
+[1342930.918420] usr
+[1342930.918434] dev
+[1342935.231137] UNLOADED studio 15 module 
 
 
 kenpi@kenpi:~/Desktop/studios/os_studios/studio15 $ ls -l /
@@ -46,7 +70,11 @@ drwxr-xr-x  11 root root  4096 Jan 27  2022 usr
 drwxr-xr-x  11 root root  4096 Jan 27  2022 var
 
 
+this sort of differs for example in my code i have selinux 
 
+
+
+5.
 
 
 

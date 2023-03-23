@@ -38,15 +38,16 @@ static int thread_fn(void * data){
         printk(KERN_INFO "pwd and root were the same %s \n",pwd_dentry->d_iname);
     }
 
-
+    printk(KERN_INFO "printing curr dir items \n");
     list_for_each_entry(curr_dentry, &(root_dentry->d_subdirs), d_child){
-        printk("%s\n",curr_dentry->d_iname);
+        if (!list_empty(&curr_dentry->d_subdirs)){
+            printk("%s\n",curr_dentry->d_iname);
+        }
     }
     /*
     list_for_each_entry(f, &fox_list, list) {
     }
     */
-
 
     
     while(!kthread_should_stop()){
