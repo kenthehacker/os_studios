@@ -17,6 +17,8 @@ static int thread_fn(void * data){
     struct vfsmount *root_mnt;
     struct dentry *pwd_dentry;
     struct dentry *root_dentry;
+    struct dentry *curr_dentry;
+    
     printk(KERN_INFO "fs: %p files: %p nsproxy: %p \n", current->fs, current->files, current->nsproxy);
 
     pwd_path = current->fs->pwd;
@@ -35,6 +37,17 @@ static int thread_fn(void * data){
     }else{
         printk(KERN_INFO "pwd and root were the same %s \n",pwd_dentry->d_iname);
     }
+
+
+    list_for_each_entry(curr_dentry, &(root_dentry->d_subdirs), d_child){
+        printk("%s\n",curr_dentry->d_iname);
+    }
+    /*
+    list_for_each_entry(f, &fox_list, list) {
+    }
+    */
+
+
     
     while(!kthread_should_stop()){
         //do nothing
