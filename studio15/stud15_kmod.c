@@ -20,7 +20,7 @@ static int thread_fn(void * data){
 static int k_mod_init(void){
     printk(KERN_INFO "LOADED studio 15 module \n");
     kthread = kthread_create(thread_fn, NULL, "vfs_kthread");
-
+    wake_up_process(kthread);
     return 0;
 }
 
