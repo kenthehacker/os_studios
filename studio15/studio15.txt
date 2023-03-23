@@ -2,5 +2,10 @@
 
 
 2.
+[1289637.998040] LOADED studio 15 module 
+[1289638.002477] fs: 1f64198c files: a2c90596 nsproxy: 29894748 
+[1289643.542036] UNLOADED studio 15 module 
 
+
+3.
 
