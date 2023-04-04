@@ -2,8 +2,52 @@
 Kenichi Matsuo
 
 2.
+kenpi@kenpi:~/Desktop/studios/os_studios/studio18 $ ./client 
+kenpi@kenpi:~/Desktop/studios/os_studios/studio18 $ 
+
+kenpi@kenpi:~/Desktop/studios/os_studios/studio18 $ ./server 
+Received value 1 
+Received value 2 
+Received value 3 
+Received value 4 
+Received value 5 
+Received value 6 
+Received value 7 
+Received value 8 
+Received value 9 
+Received value 10 
+Received value 11 
+Received value 12 
+Received value 13 
+Received value 14 
+Received value 15 
+done reading 
+cli disconnect
 
 
+3.
+Received value 1 
+Received value 2 
+Received value 3 
+Received value 4 
+Received value 5 
+Received value 6 
+Received value 7 
+Received value 8 
+Received value 9 
+Received value 10 
+Received value 1 
+Received value 2 
+Received value 3 
+Received value 4 
+Received value 5 
+Received value 6 
+Received value 7 
+Received value 8 
+Received value 9 
+Received value 10 
+Received value 418 
+client(s) disconnect TERMINAL VALUE 418 received
 
 
 
