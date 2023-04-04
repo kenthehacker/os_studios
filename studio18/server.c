@@ -5,7 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 #define BACKLOG 5
-#define BUF_SIZE 1024;
+#define BUF_SIZE 1024
 
 int main(void){
     int server_socket, comm_socket;
@@ -19,23 +19,23 @@ int main(void){
     server_socket = socket(AF_LOCAL, SOCK_STREAM, 0);
     if (server_socket == -1){
         printf("Socket failed to make\n");
-        errExit("Socket Fail");
+        perror("Socket Fail");exit(1);
     }
     memset(&server_addr, 0, sizeof(struct sockaddr_un)); 
     server_addr.sun_family = AF_LOCAL;
     strncpy(server_addr.sun_path, SOCKNAME, sizeof(server_addr.sun_path) - 1);
 
     if (bind(server_socket, (struct sockaddr *) & server_addr, sizeof(struct sockaddr_un)) == -1){
-        errExit("bind");
+        perror("bind");exit(1);
     }
 
     if (listen(server_socket, BACKLOG) == -1){
-        errExit("listen");
+        perror("listen");exit(1);
     }
 
     comm_socket = accept(server_socket, NULL, NULL);
-    if (comm_fd == -1){
-        errExit("Accept failed");
+    if (comm_socket == -1){
+        perror("Accept failed");exit(1);
     }
 
     for(;;){
