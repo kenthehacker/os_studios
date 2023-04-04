@@ -16,7 +16,6 @@ int main(void){
     char buf[BUF_SIZE];
     int num_bytes;
     int byte_count;
-    uint32_t msg;
     int cont = 1;
 
     server_socket = socket(AF_LOCAL, SOCK_STREAM, 0);
@@ -43,15 +42,25 @@ int main(void){
         if (comm_socket == -1){
             perror("Accept failed");
             exit(1);
+        }    
+        unsigned int msg;
+        //num_bytes = read(comm_socket, buf, sizeof(buf));
+        num_bytes = read(comm_socket, msg, sizeof(msg));
+        printf("received %d \n",ntohl(msg));
+        if (num_bytes<=0){
+            printf("done reading \n");
+            break;
         }
-        while(read(comm_socket, &msg, sizeof(msg))>0){
-            if (TERMINATION_VALUE == ntohl(msg)){
+        byte_count = 0;
+        while(byte_count < num_bytes){
+            sscanf(&buf[byte_count], "%u ", &current_value);
+            printf("Received value %u \n", current_value);
+            if (current_value == 418){
                 cont = 0;
-                printf("client killed server\n");
+                break;
             }
-            printf("received %u \n",ntohl(msg));
+            byte_count += sizeof(unsigned int);
         }
-
     }
 
     printf("client(s) disconnect TERMINAL VALUE %d received\n",TERMINATION_VALUE);

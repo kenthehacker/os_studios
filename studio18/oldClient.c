@@ -10,13 +10,12 @@
 int main(int argc, char * argv[]){
     struct sockaddr_un sock_address;
     int cli_socket;
-    uint32_t i;
+    unsigned int i;
     char buf[BUF_SIZE];
     char user_input[100];
     unsigned int TERMINATION_VALUE = 418;
 	const char *SOCKNAME = "PLANET_EXPRESS";
-    uint32_t payload;
-    uint32_t kill_server = 418;
+    int payload;
     
     cli_socket = socket(AF_LOCAL, SOCK_STREAM, 0);
     if (cli_socket == -1){
@@ -33,10 +32,11 @@ int main(int argc, char * argv[]){
     }
 
     if (argc == 2 && strcmp(argv[1], "quit") == 0) {
-        payload = htonl(kill_server);
-        if (write(cli_socket, &payload, sizeof(payload))<0){
-            perror("CLIENT TO KILL SERVER Fail");
-            exit(1);
+        printf("quitting program...\n");
+        sprintf(buf, "%u", TERMINATION_VALUE);
+        if (write(cli_socket, buf, sizeof(unsigned int)) < 0 ){
+            perror("CLIENT write Fail");
+			exit(1);
         }
         close(cli_socket);
         return 0;
@@ -50,9 +50,34 @@ int main(int argc, char * argv[]){
             perror("CLIENT write Fail");
             exit(1);
         }
+        // sprintf(buf, "%u", i);
+        // if (write(cli_socket, buf, sizeof(unsigned int)) < 0 ){
+        //     perror("CLIENT write Fail");
+		// 	exit(1);
+        // }
         
     }
-
+    /*
+    while(1==1){
+        printf("Enter some an int or 'quit' to exit: ");
+        scanf("%s", &user_input);
+        if (strcmp(user_input, "quit") == 0){
+            sprintf(buf,"%u",418);
+            if (write(cli_socket, buf, sizeof(unsigned int)) < 0){
+                perror("Client failed to kill server");
+                exit(1);
+            }
+            break;
+        }else{
+            i = (unsigned int) strtoul(user_input, NULL, 10);
+            sprintf(buf, "%u", i);
+            if (write(cli_socket, buf, sizeof(unsigned int)) < 0 ){
+                perror("CLIENT write Fail");
+			    exit(1);
+            }
+        }
+    }
+    */
 
     printf("this client is ded\n");
     close(cli_socket);
