@@ -19,20 +19,19 @@ int main(void){
     int byte_count;
     uint32_t msg;
     int cont = 1;
-    int port_num = 30050;
+    int port_num = 30303;
 
-    server_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_socket == -1){
+    if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0){
         printf("Socket failed to make\n");
         perror("Socket Fail");exit(1);
     }
-    memset(&server_addr, 0, sizeof(struct sockaddr_un)); 
+    memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
-    //strncpy(server_addr.sun_path, SOCKNAME, sizeof(server_addr.sun_path) - 1);
+    //strncpy(server_addr.sin_path, SOCKNAME, sizeof(server_addr.sin_path) - 1);
     server_addr.sin_port = htons(port_num);
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
-    if (bind(server_socket, (struct sockaddr *) & server_addr, sizeof(struct sockaddr_un)) == -1){
+    if (bind(server_socket, (struct sockaddr *) & server_addr, sizeof(server_addr)) == -1){
         perror("bind");exit(1);
     }
 
@@ -40,8 +39,6 @@ int main(void){
         perror("listen");exit(1);
     }
 
-    
-    
     while(1==1 && cont == 1){
         comm_socket = accept(server_socket, NULL, NULL);
         if (comm_socket == -1){
