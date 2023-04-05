@@ -62,11 +62,15 @@ int main(int argc, char * argv[]){
 
 
     printf("sending values\n");
-    for (i = 1; i<=10; i++){
+    for (i = 1; i<=50; i++){
         payload = htonl(i);
-        if (write(cli_socket, &payload, sizeof(payload))<0){
+        int byte_write = write(cli_socket, &payload, sizeof(payload));
+        if (byte_write<0){
             perror("CLIENT write Fail");
             exit(1);
+        }else if (byte_write < sizeof(payload)){
+            printf("Short write detected... killing cli\n");
+            break;        
         }
         
     }

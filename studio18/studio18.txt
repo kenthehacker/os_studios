@@ -90,7 +90,78 @@ client(s) disconnect TERMINAL VALUE 418 received
 [ken.m@shell studio18]$ 
 
 
+5.
+[ken.m@shell studio18]$ ./server 
+SERVER hostname: shell.cec.wustl.edu
+cli ip: 172.27.49.58
+received 1 
+received 2 
+received 3 
+received 4 
+received 5 
+received 6 
+received 7 
+received 8 
+received 9 
+received 10 
+cli ip: 172.27.49.58
+received 1 
+received 2 
+received 3 
+received 4 
+received 5 
+received 6 
+received 7 
+received 8 
+received 9 
+received 10 
+cli ip: 172.27.49.58
+client killed server
+received 418 
+client(s) disconnect TERMINAL VALUE 418 received
+[ken.m@shell studio18]$ 
 
+
+kenpi@kenpi:~/Desktop/studios/os_studios/studio18 $ ./client 
+CLIENT hostname: kenpi
+IP: 128.252.167.161, port: 30303
+sending values
+this client is ded
+kenpi@kenpi:~/Desktop/studios/os_studios/studio18 $ ./client 
+CLIENT hostname: kenpi
+IP: 128.252.167.161, port: 30303
+sending values
+this client is ded
+kenpi@kenpi:~/Desktop/studios/os_studios/studio18 $ ./client quit
+CLIENT hostname: kenpi
+IP: 128.252.167.161, port: 30303
+
+
+6.
+i used ntohl and htonl because i have a for loop that sends unsigned integers; though i believe
+i could have used the other set as well. 
+
+i.e. in this snippet of code:
+if (argc == 2 && strcmp(argv[1], "quit") == 0) {
+    payload = htonl(kill_server);
+    if (write(cli_socket, &payload, sizeof(payload))<0){
+        perror("CLIENT TO KILL SERVER Fail");
+        exit(1);
+    }
+    close(cli_socket);
+    return 0;
+}
+i'm expecting to send the unsigned int 418 so i convert the value stored in 
+kill_server variable to the bytes and write that which would get converted
+by ntohl 
+
+
+7.
+to handle short reads i check if the number of bytes, which is set from read()
+i check if it is smaller than sizeof(msg)
+
+to check for short writes i check if the size of written is the same size as the payload 
+if it is then i kill the client so it can be restarted
 
 
 
