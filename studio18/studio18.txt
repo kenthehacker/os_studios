@@ -50,5 +50,47 @@ Received value 418
 client(s) disconnect TERMINAL VALUE 418 received
 
 
+4.
+CLIENT:
+kenpi@kenpi:~/Desktop/studios/os_studios/studio18 $ ./client 
+sending values
+this client is ded
+kenpi@kenpi:~/Desktop/studios/os_studios/studio18 $ ./client quit
+
+
+SERVER:
+[ken.m@shell studio18]$ ./server 
+received 1 
+received 2 
+received 3 
+received 4 
+received 5 
+received 6 
+received 7 
+received 8 
+received 9 
+received 10 
+^C
+[ken.m@shell studio18]$ ls
+client  client.c  oldClient.c  oldServer.c  server  server.c  studio18.txt
+[ken.m@shell studio18]$ ./server 
+received 1 
+received 2 
+received 3 
+received 4 
+received 5 
+received 6 
+received 7 
+received 8 
+received 9 
+received 10 
+client killed server
+received 418 
+client(s) disconnect TERMINAL VALUE 418 received
+[ken.m@shell studio18]$ 
+
+
+
+
 
 

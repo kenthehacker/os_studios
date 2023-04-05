@@ -4,32 +4,50 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <netinet/ip.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 #define BUF_SIZE 1024
 
 int main(int argc, char * argv[]){
-    struct sockaddr_un sock_address;
+    struct sockaddr_in sock_address;
     int cli_socket;
     uint32_t i;
-    char buf[BUF_SIZE];
     char user_input[100];
+    char hostname[BUF_SIZE];
     unsigned int TERMINATION_VALUE = 418;
 	const char *SOCKNAME = "PLANET_EXPRESS";
     uint32_t payload;
     uint32_t kill_server = 418;
+    int port_num = 30303;
+    hostname[1023] = '\0';
     
-    cli_socket = socket(AF_LOCAL, SOCK_STREAM, 0);
+    cli_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (cli_socket == -1){
-       //errExit("CLIENT Socket Fail");
 		perror("Client socket fail\n");
 		exit(1);
     }
     memset(&sock_address, 0, sizeof(sock_address));
-    sock_address.sun_family = AF_LOCAL;
-    strncpy(sock_address.sun_path, SOCKNAME, sizeof(sock_address.sun_path) - 1);
-    if (connect(cli_socket, (struct sockaddr *) &sock_address, sizeof(struct sockaddr_un)) == -1){
+    sock_address.sin_family = AF_INET;
+    sock_address.sin_port = htons(port_num);
+    //sock_address.sin_addr.s_addr = INADDR_ANY;
+    sock_address.sin_addr.s_addr = inet_addr("128.252.167.161");
+    
+    //strncpy(sock_address.sun_path, SOCKNAME, sizeof(sock_address.sun_path) - 1);
+    if (connect(cli_socket, (struct sockaddr *) &sock_address, sizeof(sock_address)) == -1){
         perror("CLIENT connect fail");
 		exit(1);
+    }
+    
+    gethostname(hostname, 1023);
+    printf("CLIENT hostname: %s\n", hostname);
+    struct sockaddr *temp_addy = (struct sockaddr *)&sock_address;
+    socklen_t len = sizeof(sock_address);
+    char host[NI_MAXHOST];
+    char port[NI_MAXSERV];
+    int result = getnameinfo(temp_addy, len, host, NI_MAXHOST, port, NI_MAXSERV, NI_NUMERICHOST | NI_NUMERICSERV);
+    if (result == 0) {
+        printf("IP: %s, port: %s\n", host, port);
     }
 
     if (argc == 2 && strcmp(argv[1], "quit") == 0) {
@@ -60,3 +78,9 @@ int main(int argc, char * argv[]){
 }
 
 //https://www.tutorialspoint.com/c_standard_library/c_function_sprintf.htm
+/*
+int getnameinfo(const struct sockaddr *addr, socklen_t addrlen,
+char *host, socklen_t hostlen,
+char *serv, socklen_t servlen, int flags);
+
+*/
