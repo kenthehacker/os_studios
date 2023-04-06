@@ -1,0 +1,24 @@
+1.
+Kenichi Matsuo
+
+2.
+kenpi@kenpi:~/Desktop/studios/os_studios/studio19 $ ./io 
+quit
+killed program 
+kenpi@kenpi:~/Desktop/studios/os_studios/studio19 $ ./io 
+hi
+read hi
+
+i think i have gut cancer
+read i think i have gut cancer
+
+quit
+killed program 
+
+
+
+
+
+
+
+
