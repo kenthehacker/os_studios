@@ -31,24 +31,58 @@ int main(void){
     if (listen(server_sock, BACKLOG) == -1){
         perror("listen");exit(1);
     }
-    int counter = 0;
+    int max_fd = server_sock;
+    fd_set read_fds;
+    FD_ZERO(&read_fds);
+    FD_SET(server_sock, &read_fds);
     while(1==1){
-        uint32_t msg;
-        socklen_t cli_addr_len = sizeof(cli_addr);
-        incoming_socket = accept(server_sock, (struct sockaddr *) &cli_addr, &cli_addr_len);
-        int num_bytes = read(incoming_socket, &msg, sizeof(msg));
-        if (num_bytes > 0){
-            printf("received %u \n",ntohl(msg));
+        fd_set tmp_fds = read_fds;
+        int num_fds = select(max_fd+1, &tmp_fds, NULL, NULL, NULL);
+        if (num_fds == -1){
+            perror("select");
+            exit(1);
         }
-        if (counter>=5){
-            break;
+        for (int fd = 0; fd <= max_fd; fd++){
+            if (FD_ISSET(fd, &tmp_fds)){
+                if (fd == server_sock){ 
+                    socklen_t cli_addr_len = sizeof(cli_addr);
+                    incoming_socket = accept(server_sock, (struct sockaddr *) &cli_addr, &cli_addr_len);
+                    if (incoming_socket == -1){
+                        perror("accept failed");
+                    }
+                    else {
+                        FD_SET(incoming_socket, &read_fds);
+                        max_fd = incoming_socket > max_fd? incoming_socket : max_fd;
+                        printf("new connection established\n");
+                    }
+                }
+                else {
+                    uint32_t msg;
+                    int num_bytes = read(fd, &msg, sizeof(msg));
+                    if (num_bytes == -1){
+                        perror("read");
+                    }
+                    else if (num_bytes == 0){ 
+                        printf("Connection closed.\n");
+                        close(fd);
+                        FD_CLR(fd, &read_fds);
+                    }
+                    else { 
+                        printf("received %u \n",ntohl(msg));
+                        if (ntohl(msg) == 10) { // last message
+                            char server_msg[] = "Server to client message";
+                            int write_byte_len = write(fd, server_msg, sizeof(server_msg)); //strlen?
+                            if (write_byte_len == -1){
+                                perror("write");
+                            }
+                            else {
+                                printf("Wrote %d bytes to cli\n",write_byte_len);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
-    char server_msg[] = "Server to client message";
-    int write_byte_len = write(incoming_socket, server_msg, sizeof(server_msg)); //strlen?
-    printf("Wrote %d bytes to cli\n",write_byte_len);
-    close(incoming_socket);
     return 0;
 }
-
-
