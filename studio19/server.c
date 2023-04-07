@@ -64,7 +64,8 @@ int main(void){
                 num_bytes = read(comm_socket, &msg, sizeof(msg));
             }
             char server_msg[] = "Server to client message";
-            write(comm_socket, server_msg, sizeof(server_msg)); //strlen?
+            int write_byte_len = write(comm_socket, server_msg, sizeof(server_msg)); //strlen?
+            printf("Wrote %d bytes to cli\n",write_byte_len);
         }
         if (FD_ISSET(STDIN_FILENO, &readfds)){
 			char words[1024];
