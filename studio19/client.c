@@ -16,7 +16,6 @@ int main(int argc, char * argv[]){
     char user_input[100];
     char hostname[BUF_SIZE];
     unsigned int TERMINATION_VALUE = 418;
-	const char *SOCKNAME = "PLANET_EXPRESS";
     uint32_t payload;
     uint32_t kill_server = 418;
     int port_num = 30303;
@@ -60,7 +59,7 @@ int main(int argc, char * argv[]){
 
 
     printf("sending values\n");
-    for (i = 1; i<=50; i++){
+    for (i = 1; i<=10; i++){
         payload = htonl(i);
         int byte_write = write(cli_socket, &payload, sizeof(payload));
         if (byte_write<0){
@@ -70,16 +69,22 @@ int main(int argc, char * argv[]){
             printf("Short write detected... killing cli\n");
             break;        
         }
-        
     }
-    struct sockaddr_in server_addr;
+    printf("End sending values\n");
+
     char server_msg[BUF_SIZE];
-    socklen_t server_addr_size = sizeof(server_addr);
-    int comm_socket = accept(cli_socket, (struct sockaddr *) &server_addr, &server_addr_size);
-    int num_bytes = read(comm_socket, server_msg, sizeof(server_msg)-1);
-    server_msg[1023]='\0';
-    printf("Server said: %s\n",server_msg);
-    
+    int num_bytes = read(cli_socket, server_msg, sizeof(server_msg)-1);
+    if (num_bytes == -1) {
+        perror("CLIENT read fail");
+        exit(1);
+    }
+    else if (num_bytes == 0) {
+        printf("Server closed connection\n");
+    }
+    else {
+        server_msg[num_bytes] = '\0';
+        printf("Server said: %s\n", server_msg);
+    }
     
 
 
