@@ -47,6 +47,7 @@ int main(void){
             perror("select");
             exit(-1);
         }
+        printf("made it here\n");
         for (int fd = 0; fd <= max_fd; fd++){
             if (FD_ISSET(fd, &tmp_fds)){
                 if (fd == server_sock){ 

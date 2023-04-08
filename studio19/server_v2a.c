@@ -38,39 +38,44 @@ int main(int argc, char *argv[]){
     fd_set readfds, writefds;
     FD_ZERO(&readfds);
     FD_ZERO(&writefds);
+    FD_SET(sfd, &readfds);
     for(;;){
+        // printf("before\n");
         int ready = select(nfd+1, &readfds, &writefds, NULL, NULL);
+        // printf("after\n");
         if (ready == -1){
             perror("Select fail");
             exit(1);
         }
         for(int i_fd = 0; i_fd<nfd+1; i_fd++){
+            // printf("point a\n");
             if (FD_ISSET(i_fd, &readfds)){
+                // printf("point b\n");
                 if (i_fd == sfd){
-                    cfd = accept(sfd, (struct sockaddr *)&cli_addr, &(sizeof(cli_addr)));
-                    if (cfd == -1){
-                        perror("failed to accept client");
-                        exit(1);
-                    }
+                    // printf("point c\n");
+                    socklen_t addrlen = sizeof(cli_addr);
+                    cfd = accept(sfd, (struct sockaddr *)&cli_addr, &addrlen);
                     FD_SET(cfd, &readfds);
-                    nfd = cfd > nfd? cfd : nfd;
+                    if (cfd>nfd){
+                        nfd = cfd;
+                    }
                 }else{
                     uint32_t cli_msg;
+                    // printf("point d\n");
                     int byte_count = read(i_fd, &cli_msg, sizeof(uint32_t));
+                    // printf("point e\n");
                     if (byte_count == 0){
                         close(i_fd);
                         FD_CLR(i_fd, &readfds);
                     }else{
-                        while(byte_count > 0){
-                            printf("read from cli: %u\n", ntohl(cli_msg));  
-                            byte_count = read(i_fd, &cli_msg, sizeof(uint32_t));
+                        printf("msg from client: %u\n",ntohl(cli_msg));
+                        if(ntohl(cli_msg) == 418){
+                            char server_to_cli_msg[BUF_SIZE];
+                            char hostname[BUF_SIZE];
+                            gethostname(hostname,BUF_SIZE);
+                            sprintf(server_to_cli_msg, "%s: end of msg", hostname);
                         }
-                        char server_to_cli_msg[BUF_SIZE];
-                        char hostname[BUF_SIZE];
-                        gethostname(hostname,BUF_SIZE);
-                        sprintf(server_to_cli_msg, "%s: end of msg", hostname);
-                        
-
+                        // printf("point f\n");
                     }
                 }
             }
