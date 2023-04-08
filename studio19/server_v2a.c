@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
     struct sockaddr_in addr, cli_addr;
     unsigned int end_of_message = 418;
     int sfd, cfd;
-    int port_num = 30500;
+    int port_num = 30303;
     sfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sfd == -1){
         perror("server socket failed");

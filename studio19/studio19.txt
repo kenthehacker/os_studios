@@ -18,23 +18,22 @@ killed program
 
 3.
 
+[ken.m@shell studio19]$ ./server_v2a 
+msg from client: 1
+msg from client: 2
+msg from client: 3
+msg from client: 4
+msg from client: 5
+msg from client: 6
+msg from client: 7
+msg from client: 8
+msg from client: 9
+msg from client: 10
+connection to 172.27.49.58 client killed
+
 kenpi@kenpi:~/Desktop/studios/os_studios/studio19 $ ./client_v2 
 End sending values
-Server response: shell.cec.wustl.edu to cli: end of msg
-
-[ken.m@shell studio19]$ ./server_v2 
-received 1 
-received 2 
-received 3 
-received 4 
-received 5 
-received 6 
-received 7 
-received 8 
-received 9 
-received 10 
-
-
+Server response: shell.cec.wustl.edu: end of msg
 
 
 
