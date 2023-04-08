@@ -20,11 +20,9 @@ killed program
 
 kenpi@kenpi:~/Desktop/studios/os_studios/studio19 $ ./client_v2 
 End sending values
-Server response: shell.cec.wustl.edu to cli: received your digits
+Server response: shell.cec.wustl.edu to cli: end of msg
 
 [ken.m@shell studio19]$ ./server_v2 
-INITIAL server_sock: 3
-new connection established
 received 1 
 received 2 
 received 3 
@@ -35,8 +33,6 @@ received 7
 received 8 
 received 9 
 received 10 
-Wrote 1024 bytes to cli
-Connection closed
 
 
 

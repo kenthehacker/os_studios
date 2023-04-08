@@ -15,8 +15,9 @@
 
 int main(int argc, char *argv[]){
     struct sockaddr_in addr, cli_addr;
+    unsigned int end_of_message = 418;
     int sfd, cfd;
-    int port_num = 30303;
+    int port_num = 30500;
     sfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sfd == -1){
         perror("server socket failed");
@@ -26,10 +27,10 @@ int main(int argc, char *argv[]){
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port_num);
     addr.sin_addr.s_addr = INADDR_ANY;
-    if (bind(sfd, (struct sockaddr *) &addr, sizeof(struct sockaddr_in)) == -1){
-        perror("bind fail");
-        exit(1);
-    } 
+    while(bind(sfd, (struct sockaddr *) &addr, sizeof(struct sockaddr_in)) == -1){
+        printf("bind fail, addy in use\n");
+        printf("trying to bind again...");
+    }
     if (listen(sfd, BACKLOG) == -1){
         perror("listen fail");
         exit(1);
@@ -41,15 +42,13 @@ int main(int argc, char *argv[]){
     FD_SET(sfd, &readfds);
     for(;;){
         // printf("before\n");
-        int ready = select(nfd+1, &readfds, &writefds, NULL, NULL);
+        fd_set temp_read_fds = readfds;
+        select(nfd+1, &temp_read_fds, &writefds, NULL, NULL);
         // printf("after\n");
-        if (ready == -1){
-            perror("Select fail");
-            exit(1);
-        }
+        
         for(int i_fd = 0; i_fd<nfd+1; i_fd++){
             // printf("point a\n");
-            if (FD_ISSET(i_fd, &readfds)){
+            if (FD_ISSET(i_fd, &temp_read_fds)){
                 // printf("point b\n");
                 if (i_fd == sfd){
                     // printf("point c\n");
@@ -65,15 +64,23 @@ int main(int argc, char *argv[]){
                     int byte_count = read(i_fd, &cli_msg, sizeof(uint32_t));
                     // printf("point e\n");
                     if (byte_count == 0){
+                        char client_ip[INET_ADDRSTRLEN];
+                        inet_ntop(AF_INET, &(cli_addr.sin_addr), client_ip, INET_ADDRSTRLEN);
+                        printf("connection to %s client killed\n",client_ip);
                         close(i_fd);
                         FD_CLR(i_fd, &readfds);
                     }else{
-                        printf("msg from client: %u\n",ntohl(cli_msg));
-                        if(ntohl(cli_msg) == 418){
+                        unsigned int unsigned_cli_message = ntohl(cli_msg);
+                        if (unsigned_cli_message != end_of_message){
+                            printf("msg from client: %u\n",unsigned_cli_message);
+                        }
+                        if(unsigned_cli_message == end_of_message){
+                            // printf("here\n");
                             char server_to_cli_msg[BUF_SIZE];
                             char hostname[BUF_SIZE];
                             gethostname(hostname,BUF_SIZE);
                             sprintf(server_to_cli_msg, "%s: end of msg", hostname);
+                            write(nfd, server_to_cli_msg, sizeof(server_to_cli_msg));
                         }
                         // printf("point f\n");
                     }
