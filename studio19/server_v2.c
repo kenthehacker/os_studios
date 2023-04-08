@@ -17,7 +17,7 @@ int main(void){
     int server_sock, incoming_socket;
     char hostname[BUF_SIZE];
     gethostname(hostname,BUF_SIZE);
-    int port_num = 30303;
+    int port_num = 30500;
     if ((server_sock = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         perror("socket failed to make\n");
         exit(1);
