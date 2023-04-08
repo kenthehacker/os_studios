@@ -57,6 +57,7 @@ int main(void){
                     }
                 }
                 else {
+                    printf("fd: %d\n",fd);
                     uint32_t msg;
                     int num_bytes = read(fd, &msg, sizeof(msg));
                     if (num_bytes == -1){
@@ -69,7 +70,7 @@ int main(void){
                     }
                     else { 
                         printf("received %u \n",ntohl(msg));
-                        if (ntohl(msg) == 10) { // last message
+                        if (ntohl(msg) == 10) {
                             char server_msg[] = "Server to client message";
                             int write_byte_len = write(fd, server_msg, sizeof(server_msg)); //strlen?
                             if (write_byte_len == -1){
@@ -86,3 +87,6 @@ int main(void){
     }
     return 0;
 }
+
+
+

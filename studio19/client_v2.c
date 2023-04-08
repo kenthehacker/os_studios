@@ -22,11 +22,11 @@ int main(int argc, char *argv[]){
     address.sin_family = AF_INET;
     address.sin_port = htons(port_num);
     address.sin_addr.s_addr = inet_addr("128.252.167.161");
-    if (connect(cli_socket, (struct sockaddr *) &sock_address, sizeof(sock_address)) == -1){
+    if (connect(cli_socket, (struct sockaddr *) &address, sizeof(address)) == -1){
         perror("CLIENT connect fail");
 		exit(1);
     }
-    for (i = 1; i<=10; i++){
+    for (int i = 1; i<=10; i++){
         uint32_t payload = htonl(i);
         int byte_write = write(cli_socket, &payload, sizeof(payload));
         if (byte_write<0){
