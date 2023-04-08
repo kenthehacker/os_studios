@@ -63,7 +63,7 @@ int main(void){
                     }
                 }
                 else {
-                    printf("fd: %d\n",fd);
+                    // printf("fd: %d\n",fd);
                     uint32_t msg;
                     int num_bytes = read(fd, &msg, sizeof(msg));
                     if (num_bytes == -1){
