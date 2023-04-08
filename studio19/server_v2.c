@@ -37,6 +37,7 @@ int main(void){
     FD_SET(server_sock, &read_fds);
     while(1==1){
         printf("maxfd: %d\n",max_fd);
+        printf("server_sock: %d\n",server_sock);
         fd_set tmp_fds = read_fds;
         int num_fds = select(max_fd+1, &tmp_fds, NULL, NULL, NULL);
         if (num_fds == -1){
