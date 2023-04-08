@@ -11,7 +11,7 @@
 
 int main(int argc, char *argv[]){
     int cli_socket;
-    int port_num = 30500;
+    int port_num = 30303;
     struct sockaddr_in address;
     cli_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (cli_socket == -1){
