@@ -20,6 +20,7 @@ int main(void){
         perror("socket failed to make\n");
         exit(1);
     }
+    printf("INITIAL server_sock: %d\n",server_sock);
     struct sockaddr_in server_addr, cli_addr;
     memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
