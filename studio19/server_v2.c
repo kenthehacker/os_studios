@@ -15,6 +15,8 @@
 
 int main(void){
     int server_sock, incoming_socket;
+    char hostname[BUF_SIZE];
+    gethostname(hostname,BUF_SIZE);
     int port_num = 30303;
     if ((server_sock = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         perror("socket failed to make\n");
@@ -37,13 +39,13 @@ int main(void){
     FD_ZERO(&read_fds);
     FD_SET(server_sock, &read_fds);
     while(1==1){
-        printf("maxfd: %d\n",max_fd);
-        printf("server_sock: %d\n",server_sock);
+        // printf("maxfd: %d\n",max_fd);
+        // printf("server_sock: %d\n",server_sock);
         fd_set tmp_fds = read_fds;
         int num_fds = select(max_fd+1, &tmp_fds, NULL, NULL, NULL);
         if (num_fds == -1){
             perror("select");
-            exit(1);
+            exit(-1);
         }
         for (int fd = 0; fd <= max_fd; fd++){
             if (FD_ISSET(fd, &tmp_fds)){
@@ -52,6 +54,7 @@ int main(void){
                     incoming_socket = accept(server_sock, (struct sockaddr *) &cli_addr, &cli_addr_len);
                     if (incoming_socket == -1){
                         perror("accept failed");
+                        exit(-1);
                     }
                     else {
                         FD_SET(incoming_socket, &read_fds);
@@ -65,19 +68,22 @@ int main(void){
                     int num_bytes = read(fd, &msg, sizeof(msg));
                     if (num_bytes == -1){
                         perror("read");
+                        exit(-1);
                     }
                     else if (num_bytes == 0){ 
-                        printf("Connection closed.\n");
+                        printf("Connection closed\n");
                         close(fd);
                         FD_CLR(fd, &read_fds);
                     }
                     else { 
                         printf("received %u \n",ntohl(msg));
                         if (ntohl(msg) == 10) {
-                            char server_msg[] = "Server to client message";
+                            char server_msg[BUF_SIZE];
+                            sprintf(server_msg,"%s to cli: received your digits",hostname);
                             int write_byte_len = write(fd, server_msg, sizeof(server_msg)); //strlen?
                             if (write_byte_len == -1){
                                 perror("write");
+                                exit(-1);
                             }
                             else {
                                 printf("Wrote %d bytes to cli\n",write_byte_len);
