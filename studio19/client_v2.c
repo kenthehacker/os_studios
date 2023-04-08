@@ -37,6 +37,10 @@ int main(int argc, char *argv[]){
             break;        
         }
     }
+    uint32_t payload = htonl(418);
+    int byte_write = write(cli_socket, &payload, sizeof(payload));
+
+
     printf("End sending values\n");
     char buffer[1024] = {0};
     if (read(cli_socket, buffer, 1024) < 0) {
