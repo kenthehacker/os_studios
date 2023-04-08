@@ -36,6 +36,7 @@ int main(void){
     FD_ZERO(&read_fds);
     FD_SET(server_sock, &read_fds);
     while(1==1){
+        printf("maxfd: %d\n",max_fd);
         fd_set tmp_fds = read_fds;
         int num_fds = select(max_fd+1, &tmp_fds, NULL, NULL, NULL);
         if (num_fds == -1){
@@ -43,7 +44,6 @@ int main(void){
             exit(1);
         }
         for (int fd = 0; fd <= max_fd; fd++){
-            printf("maxfd: %d\n",max_fd);
             if (FD_ISSET(fd, &tmp_fds)){
                 if (fd == server_sock){ 
                     socklen_t cli_addr_len = sizeof(cli_addr);
