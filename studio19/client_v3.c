@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
         printf("Say something to server\n");
         fgets(message, sizeof(message), stdin);
         strcat(message,"\n");
-        write(fd,message,strlen(message),0);
+        write(fd,message,strlen(message));
         if (strcmp(message,"quit\n") == 0){
             break;
         }
