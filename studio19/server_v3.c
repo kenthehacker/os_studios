@@ -41,8 +41,8 @@ int init_socket(){
 
 int accept_client(int server_socket){
     struct sockaddr_in client_address;
-    socklen_t len = sizeof(sockaddr_in);
-    int client_socket = accept(server_socket, (struct sockaddr *) client_address, &len);
+    socklen_t len = sizeof(client_address);
+    int client_socket = accept(server_socket, (struct sockaddr *) &client_address, &len);
     if (client_socket > 0){
         printf("Client established %s\n",inet_ntoa(client_address.sin_addr));
     }else{
@@ -89,6 +89,7 @@ int main(int argc, char *argv[]){
         }
         if (nfd > 2){
             if (pollFd[2].revents & POLLIN){
+                char client_message[BUF_SIZE];
                 int byte_count = read(pollFd[2].fd, client_message, BUF_SIZE);
                 if (byte_count == 0){
                     nfd = 2;
@@ -96,7 +97,6 @@ int main(int argc, char *argv[]){
                     printf("client connection killed\n");
                 }
                 else if (byte_count>0){
-                    char client_message[BUF_SIZE];
                     char *token = strtok(client_message, "\n");
                     while(token!=NULL){
                         printf("cli msg: %s\n",client_message);
