@@ -36,6 +36,23 @@ End sending values
 Server response: shell.cec.wustl.edu: end of msg
 
 4.
+[ken.m@shell studio19]$ ./server_v3 
+SERVER socket: 0   3
+Client established 172.27.49.58
+hi
+i like pineapples
+client connection killed
+quit //<-right here is my stdin input where i tell it to kill itself
+STDIN fd: 1   0
+killed program 
+
+kenpi@kenpi:~/Desktop/studios/os_studios/studio19 $ ./client_v3
+Say something to server
+hi
+Say something to server
+i like pineapples
+Say something to server
+quit //<- this is when i have the client kill the conn with the server, hence is why the server said cli conn killed 
 
 
 5.
