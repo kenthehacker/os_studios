@@ -9,7 +9,7 @@
 #include <netdb.h>
 #define BUF_SIZE 1024
 
-int main(int argc, char *argv[]){
+int connect_to_server(){
     int cli_socket;
     int port_num = 30303;
     struct sockaddr_in address;
@@ -26,28 +26,38 @@ int main(int argc, char *argv[]){
         perror("CLIENT connect fail");
 		exit(1);
     }
+    return cli_socket;
+}
+
+int main(int argc, char *argv[]){
+    int fd = connect_to_server();
     for (int i = 1; i<=10; i++){
-        uint32_t payload = htonl(i);
-        int byte_write = write(cli_socket, &payload, sizeof(payload));
-        if (byte_write<0){
-            perror("CLIENT write Fail");
+        char msg[64];
+        sprintf(msg,"client says: %d\n",i);
+        int bytes_written = write(fd, msg, sizeof(msg));
+        if (bytes_written<0){
+            perror("write failure");
             exit(1);
-        }else if (byte_write < sizeof(payload)){
-            printf("Short write detected... killing cli\n");
-            break;        
         }
     }
-    uint32_t payload = htonl(418);
-    int byte_write = write(cli_socket, &payload, sizeof(payload));
-
-
-    printf("End sending values\n");
-    char buffer[1024] = {0};
-    if (read(cli_socket, buffer, 1024) < 0) {
-        perror("read failed");
-        exit(EXIT_FAILURE);
+    while(1==1){
+        char message[BUF_SIZE];
+        printf("Say something to server\n");
+        fgets(message, sizeof(message), stdin);
+        strcat(message,"\n");
+        write(fd,message,strlen(message),0);
+        if (strcmp(message,"quit\n") == 0){
+            break;
+        }
     }
-    printf("Server response: %s\n", buffer);
+
+    // printf("End sending values\n");
+    // char buffer[1024];
+    // if (read(fd, buffer, 1024) < 0) {
+    //     perror("read failed");
+    //     exit(EXIT_FAILURE);
+    // }
+    // printf("Server response: %s\n", buffer);
 
     return 0;
 }

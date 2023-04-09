@@ -42,10 +42,10 @@ int main(int argc, char *argv[]){
 
 
     printf("End sending values\n");
-    char buffer[1024] = {0};
+    char buffer[1024];
     if (read(cli_socket, buffer, 1024) < 0) {
         perror("read failed");
-        exit(EXIT_FAILURE);
+        exit(0);
     }
     printf("Server response: %s\n", buffer);
 

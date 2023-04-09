@@ -11,92 +11,117 @@
 #include <arpa/inet.h>
 #include <netinet/ip.h>
 #include <netdb.h>
+#include <poll.h>
 #define BACKLOG 5
 #define BUF_SIZE 1024
 
-int main(int argc, char *argv[]){
-    struct sockaddr_in addr, cli_addr;
-    unsigned int end_of_message = 418;
-    int sfd, cfd;
+int init_socket(){
+    struct sockaddr_in serv_addr;
+    int sfd;
     int port_num = 30303;
     sfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sfd == -1){
         perror("server socket failed");
         exit(1);
     }
-    memset(&addr, 0, sizeof(struct sockaddr_in));
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port_num);
-    addr.sin_addr.s_addr = INADDR_ANY;
-    while(bind(sfd, (struct sockaddr *) &addr, sizeof(struct sockaddr_in)) == -1){
+    memset(&serv_addr, 0, sizeof(struct sockaddr_in));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(port_num);
+    serv_addr.sin_addr.s_addr = INADDR_ANY;
+    while(bind(sfd, (struct sockaddr *) &serv_addr, sizeof(struct sockaddr_in)) == -1){
         printf("bind fail, addy in use\n");
-        printf("trying to bind again...");
+        printf("trying to bind again...\n");
     }
     if (listen(sfd, BACKLOG) == -1){
         perror("listen fail");
         exit(1);
     }
-    int nfd = sfd > STDIN_FILENO ? sfd : STDIN_FILENO;
-    fd_set readfds, writefds;
-    FD_ZERO(&readfds);
-    FD_ZERO(&writefds);
-    FD_SET(sfd, &readfds);
-    for(;;){
-        // printf("before\n");
-        fd_set temp_read_fds = readfds;
-        select(nfd+1, &temp_read_fds, &writefds, NULL, NULL);
-        // printf("after\n");
-        
-        for(int i_fd = 0; i_fd<nfd+1; i_fd++){
-            // printf("point a\n");
-            if (FD_ISSET(i_fd, &temp_read_fds)){
-                // printf("point b\n");
-                if (i_fd == sfd){
-                    // printf("point c\n");
-                    socklen_t addrlen = sizeof(cli_addr);
-                    cfd = accept(sfd, (struct sockaddr *)&cli_addr, &addrlen);
-                    FD_SET(cfd, &readfds);
-                    if (cfd>nfd){
-                        nfd = cfd;
+    return sfd;
+}
+
+int accept_client(int server_socket){
+    struct sockaddr_in client_address;
+    socklen_t len = sizeof(sockaddr_in);
+    int client_socket = accept(server_socket, (struct sockaddr *) client_address, &len);
+    if (client_socket > 0){
+        printf("Client established %s\n",inet_ntoa(client_address.sin_addr));
+    }else{
+        perror("failed to accept client"); exit(1);
+    }
+    return client_socket;
+}
+
+int main(int argc, char *argv[]){
+    int sfd = init_socket();
+    struct pollfd *pollFd;
+    int nfd = 2;
+    pollFd = calloc(3, sizeof(struct pollfd));
+    if (pollFd == NULL){
+        perror("pollFd calloc");
+        exit(1);
+    }
+    pollFd[0].fd = sfd;
+    pollFd[0].events = POLLIN;
+    pollFd[1].fd = STDIN_FILENO;
+    pollFd[1].events = POLLIN;
+    while(1==1){
+        int ready = poll(pollFd, nfd, -1);
+        if (ready<0){
+            perror("poll failed");
+            exit(1);
+        }
+        if (pollFd[0].revents & POLLIN){
+            printf("SERVER socket: %d %3d\n", 0, pollFd[0].fd);
+            int client_socket = accept_client(sfd);
+            pollFd[2].fd = client_socket;
+            pollFd[2].events = POLLIN | POLLRDHUP;
+            nfd = 3;
+        }
+        if (pollFd[1].revents & POLLIN){
+            printf("STDIN fd: %d %3d\n", 1, pollFd[1].fd);
+            char words[BUF_SIZE];
+			fgets(words, BUF_SIZE, stdin);
+			if(strcmp(words,"quit\n") == 0){
+				printf("killed program \n");
+				return 0;
+			}
+			printf("read %s\n",words);
+        }
+        if (nfd > 2){
+            if (pollFd[2].revents & POLLIN){
+                int byte_count = read(pollFd[2].fd, client_message, BUF_SIZE);
+                if (byte_count == 0){
+                    nfd = 2;
+                    close(pollFd[2].fd);                    
+                    printf("client connection killed\n");
+                }
+                else if (byte_count>0){
+                    char client_message[BUF_SIZE];
+                    char *token = strtok(client_message, "\n");
+                    while(token!=NULL){
+                        printf("cli msg: %s\n",client_message);
+                        if (strcmp(client_message,"quit\n") == 0){
+                            return 0;
+                        }
+                        token = strtok(NULL, "\n");
                     }
                 }
-                else if (i_fd == STDIN_FILENO){
-                    char words[1024];
-                    fgets(words, 1024, stdin);
-                    if(strcmp(words,"quit\n") == 0){
-                        printf("killed program \n");
-                        return 0;
-                    }
-                    printf("read %s\n",words);
-                }else{
-                    uint32_t cli_msg;
-                    // printf("point d\n");
-                    int byte_count = read(i_fd, &cli_msg, sizeof(uint32_t));
-                    // printf("point e\n");
-                    if (byte_count == 0){
-                        char client_ip[INET_ADDRSTRLEN];
-                        inet_ntop(AF_INET, &(cli_addr.sin_addr), client_ip, INET_ADDRSTRLEN);
-                        printf("connection to %s client killed\n",client_ip);
-                        close(i_fd);
-                        FD_CLR(i_fd, &readfds);
-                    }else{
-                        unsigned int unsigned_cli_message = ntohl(cli_msg);
-                        if (unsigned_cli_message != end_of_message){
-                            printf("msg from client: %u\n",unsigned_cli_message);
-                        }
-                        if(unsigned_cli_message == end_of_message){
-                            // printf("here\n");
-                            char server_to_cli_msg[BUF_SIZE];
-                            char hostname[BUF_SIZE];
-                            gethostname(hostname,BUF_SIZE);
-                            sprintf(server_to_cli_msg, "%s: end of msg", hostname);
-                            write(nfd, server_to_cli_msg, sizeof(server_to_cli_msg));
-                        }
-                        // printf("point f\n");
-                    }
+                else{
+                    perror("read failed");
+                    exit(1);
                 }
             }
+            if (pollFd[2].revents & POLLRDHUP){
+                nfd = 2;
+                close(pollFd[2].fd);
+                printf("client connection killed\n");
+            }
         }
+        
+        
     }
-    
+    return 0;
 }
+
+
+//https://www.geeksforgeeks.org/strtok-strtok_r-functions-c-examples/
