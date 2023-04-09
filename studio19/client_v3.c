@@ -44,21 +44,16 @@ int main(int argc, char *argv[]){
         char message[BUF_SIZE];
         printf("Say something to server\n");
         fgets(message, sizeof(message), stdin);
-        strcat(message,"\n");
-        write(fd,message,strlen(message));
+
         if (strcmp(message,"quit\n") == 0){
+            close(fd);
             break;
         }
+        strcat(message,"\n");
+        write(fd,message,strlen(message));
+        
     }
-
-    // printf("End sending values\n");
-    // char buffer[1024];
-    // if (read(fd, buffer, 1024) < 0) {
-    //     perror("read failed");
-    //     exit(EXIT_FAILURE);
-    // }
-    // printf("Server response: %s\n", buffer);
-
+    close(fd);
     return 0;
 }
 

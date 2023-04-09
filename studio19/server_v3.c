@@ -83,6 +83,11 @@ int main(int argc, char *argv[]){
 			fgets(words, BUF_SIZE, stdin);
 			if(strcmp(words,"quit\n") == 0){
 				printf("killed program \n");
+                close(pollFd[0].fd);
+                close(pollFd[1].fd);
+                if (nfd>0){
+                    close(pollFd[2].fd);
+                }
 				return 0;
 			}
 			printf("read %s\n",words);
