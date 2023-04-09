@@ -35,7 +35,10 @@ kenpi@kenpi:~/Desktop/studios/os_studios/studio19 $ ./client_v2
 End sending values
 Server response: shell.cec.wustl.edu: end of msg
 
+4.
 
+
+5.
 
 
 
