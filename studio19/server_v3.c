@@ -99,16 +99,25 @@ int main(int argc, char *argv[]){
                 if (byte_count == 0){
                     nfd = 2;
                     close(pollFd[2].fd);                    
-                    printf("client connection killed\n");
                 }
                 else if (byte_count>0){
                     char *token = strtok(client_message, "\n");
-                    while(token!=NULL){
-                        printf("cli msg: %s\n",client_message);
-                        if (strcmp(client_message,"quit\n") == 0){
-                            return 0;
+                    printf("%s\n", token);
+                    // while(token!=NULL){
+                    //     printf("cli msg: %s\n",client_message);
+                    //     // if (strcmp(client_message,"quit\n") == 0){
+                    //     //     return 0;
+                    //     // }
+                    //     // token = strtok(NULL, "\n");
+                    // }
+                    if ((strcmp(token, "quit\n") == 0) || (strcmp(token, "quit") == 0)){
+                        printf("killed program \n");
+                        close(pollFd[0].fd);
+                        close(pollFd[1].fd);
+                        if (nfd>0){
+                            close(pollFd[2].fd);
                         }
-                        token = strtok(NULL, "\n");
+                        return 0;
                     }
                 }
                 else{

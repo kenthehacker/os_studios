@@ -31,15 +31,6 @@ int connect_to_server(){
 
 int main(int argc, char *argv[]){
     int fd = connect_to_server();
-    for (int i = 1; i<=10; i++){
-        char msg[64];
-        sprintf(msg,"client says: %d\n",i);
-        int bytes_written = write(fd, msg, sizeof(msg));
-        if (bytes_written<0){
-            perror("write failure");
-            exit(1);
-        }
-    }
     while(1==1){
         char message[BUF_SIZE];
         printf("Say something to server\n");
