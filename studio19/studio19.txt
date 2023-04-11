@@ -56,6 +56,42 @@ quit //<- this is when i have the client kill the conn with the server, hence is
 
 
 5.
+[ken.m@shell studio19]$ ./e_server 
+Client established 172.27.49.58
+cli said: i like trains         <-this is the client saying this
 
+
+hi                              <-this is the stdin input saying this
+read hi
+
+die
+read die
+
+quit                            <-this is also the stdin input telling server to die 
+killed program  
+
+
+
+
+with edge level triggers->
+[ken.m@shell studio19]$ ./e_server 
+Client established 172.27.49.58
+cli said: hi
+
+
+cli said: there
+
+
+meap
+read meap
+
+quit
+killed program
+
+
+the difference in behaviour is the way we monitor the fd for stdin_input the original code would
+check for the input on stdin over and over regardless if there were data to be read from. 
+the new one with edge level trigger checks for input iff there's new data inside of the stdin 
+but if we don't check if there's data to be read there's a slight chance the data wont be read 
 
 
